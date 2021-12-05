@@ -1,4 +1,4 @@
-Just doing some code puzzles to try to save Christmas!
+Code puzzles to try to save Christmas!
 
 ## Setup
 1. Install Ruby version
@@ -7,4 +7,11 @@ Just doing some code puzzles to try to save Christmas!
     `gem install bundler`
 3. Install dependencies
     `bundle`
-4. 
+
+## Run
+Just run the main file for the day in question:
+`ruby ./day_x/main.rb`
+
+## Test
+Run the spec file for the day:
+`rspec ./day_x/spec_name.rb`
