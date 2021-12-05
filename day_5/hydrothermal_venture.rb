@@ -2,18 +2,13 @@ class HydrothermalVenture
   def self.run(data: File.readlines('./day_5/data.txt', chomp: true), include_diagonal: false)
     lines = self.clean_data(data).map { |coordinates_pair| Line.new(coordinates_pair) }
     lines_to_consider = include_diagonal ? lines : lines.select { |line| line.is_horizontal? || line.is_vertical? }
-    self.find_overlaps(lines_to_consider).count
+    self.count_overlaps(lines_to_consider)
   end
 
-  def self.find_overlaps(lines, overlaps: [])
-    first_line, *rest_of_lines = lines
-
-    new_overlap_sets = rest_of_lines.filter_map do |line|
-      overlaps_for_line_pair = first_line.integer_points_covered.intersection(line.integer_points_covered)
-      !overlaps_for_line_pair.empty? && overlaps_for_line_pair
-    end
-
-    rest_of_lines.empty? ? overlaps.uniq : self.find_overlaps(rest_of_lines, overlaps: overlaps + new_overlap_sets.flatten(1))
+  def self.count_overlaps(lines)
+    lines.flat_map { |line| line.integer_points_covered }
+      .tally
+      .count { |_, v| v > 1 }
   end
 
   def self.clean_data(data)

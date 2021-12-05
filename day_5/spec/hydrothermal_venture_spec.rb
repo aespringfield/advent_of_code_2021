@@ -15,12 +15,12 @@ RSpec.describe 'Hydrothermal Venture' do
     end
   end
 
-  describe '#find_overlaps' do
+  describe '#count_overlaps' do
     it 'finds points of overlap for horizontal lines' do
-      expect(HydrothermalVenture.find_overlaps([
+      expect(HydrothermalVenture.count_overlaps([
         Line.new([[0,9],[5,9]]),
         Line.new([[0,9],[2,9]])
-      ])).to eq([[0,9],[1,9],[2,9]])
+      ])).to eq(3)
     end
   end
 
@@ -89,6 +89,38 @@ RSpec.describe 'Line' do
       expect(line.is_vertical?).to be(false)
     end
   end
+
+  # describe '#overlaps_with' do
+  #   it 'returns overlaps if line overlaps horizontally' do
+  #     line1 = Line.new([[0,9],[5,9]])
+  #     line2 = Line.new([[6,9],[2,9]])
+  #     expect(line1.overlaps_with(line2)).to eq([
+  #       [2,9],
+  #       [3,9],
+  #       [4,9],
+  #       [5,9]
+  #     ])
+  #   end
+  #
+  #   it 'returns overlaps if line overlaps vertically' do
+  #     line1 = Line.new([[2,1],[2,5]])
+  #     line2 = Line.new([[2,6],[2,2]])
+  #     expect(line1.overlaps_with(line2)).to eq([
+  #       [2,2],
+  #       [2,3],
+  #       [2,4],
+  #       [2,5]
+  #     ])
+  #   end
+  #
+  #   it 'returns overlaps if line intersects' do
+  #     line1 = Line.new([[5,8],[0,8]])
+  #     line2 = Line.new([[3,9],[3,2]])
+  #     expect(line1.overlaps_with(line2)).to eq([
+  #       [3,8]
+  #     ])
+  #   end
+  # end
 
   describe '#integer_points_covered' do
     it 'returns points for a horizontal line' do
