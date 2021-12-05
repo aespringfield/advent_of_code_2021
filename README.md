@@ -14,4 +14,4 @@ Just run the main file for the day in question:
 
 ## Test
 Run the spec file for the day:
-`rspec ./day_x/spec_name.rb`
+`rspec ./day_x/spec/spec_name.rb`
