@@ -1,8 +1,8 @@
 class Lanternfish
-  def self.run
+  def self.run(days)
     data = File.read('./day_6/data.txt', chomp: true)
     fish_days_left_counts = data.split(',').map(&:to_i).sort.tally
-    new_fish_days_left_counts = simulate_days(256, fish_days_left_counts)
+    new_fish_days_left_counts = simulate_days(days, fish_days_left_counts)
     new_fish_days_left_counts.values.sum
   end
 
