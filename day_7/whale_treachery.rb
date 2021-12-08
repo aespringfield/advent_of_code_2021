@@ -4,7 +4,7 @@ class WhaleTreachery
     crab_positions = data.split(',').map(&:to_i).sort
 
     _, movement = if triangular
-                           avg = (crab_positions.sum.to_f / crab_positions.length).round
+                           avg = self.find_median(crab_positions)
                            self.find_minimum_movement_position(avg, (crab_positions.length / 4.0).round, crab_positions) do |position, positions|
                              self.calculate_triangular_movement(position, positions)
                            end
@@ -29,15 +29,13 @@ class WhaleTreachery
 
     best_position, best_position_movement = results.min { |(_, v1), (_, v2)| v1 <=> v2 }
 
-    if higher_position - lower_position <= 2
-      return [best_position, best_position_movement]
-    end
+    return [best_position, best_position_movement] if higher_position - lower_position <= 2
 
-    # # if both are lower: keep same start position and divide interval in half
+    # if start position movement is best: keep same start position and divide interval in half
     if start_position == best_position
       self.find_minimum_movement_position(start_position, (interval / 2.0).ceil, positions, start_position_movement, run_count + 1, &block)
     else
-      # if one of those is higher: use that as new start position & keep same interval, run again
+      # if one of the others is better: use that as new start position & keep same interval, run again
       self.find_minimum_movement_position(best_position, interval, positions, best_position_movement, run_count + 1, &block)
     end
   end
@@ -51,6 +49,10 @@ class WhaleTreachery
       distance = (position - pos).abs
       total + (distance * (distance + 1) / 2)
     end
+  end
+
+  def self.find_average(arr)
+    (arr.sum.to_f / arr.length).round
   end
 
   def self.find_median(arr, presorted: true)
