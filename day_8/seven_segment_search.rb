@@ -1,20 +1,7 @@
 class SevenSegmentSearch
   POSSIBLE_SEGMENTS = %w[a b c d e f g]
-  SEGMENTS_FOR_DIGITS = {
-    0 => %w[a b c e f g],
-    1 => %w[c f],
-    2 => %w[a c d e g],
-    3 => %w[a c d f g],
-    4 => %w[b c d f],
-    5 => %w[a b d f g],
-    6 => %w[a b d e f g],
-    7 => %w[a c f],
-    8 => %w[a b c d e f g],
-    9 => %w[a b c d f g]
-  }
 
   def self.run(data: File.readlines('./day_8/data.txt', chomp: true), add_all: false)
-
     displays = data.map do |line|
       inputs, outputs = line.split('|').map { |str| str.split(' ') }
       { inputs: inputs, outputs: outputs }
