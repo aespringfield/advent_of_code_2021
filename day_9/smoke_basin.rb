@@ -3,8 +3,6 @@ class SmokeBasin
     rows = data.map { |row| row.chars.map(&:to_i) }
     if basins
       basins = find_basins(rows)
-      new_rows = rows.map { |row| row.dup }
-      basins.each { |basin| basin.each { |row_i, col_i| new_rows[row_i][col_i] = 'x' } }
       multiply_size_of_three_largest_basins(basins)
     else
       low_points = find_low_points(rows)
