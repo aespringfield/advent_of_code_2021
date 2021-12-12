@@ -2,9 +2,8 @@ class WhaleTreachery
   def self.run(triangular: false)
     data = File.read('./day_7/data.txt', chomp: true)
     crab_positions = data.split(',').map(&:to_i).sort
-
     _, movement = if triangular
-                           avg = self.find_median(crab_positions)
+                           avg = self.find_average(crab_positions)
                            self.find_minimum_movement_position(avg, (crab_positions.length / 4.0).round, crab_positions) do |position, positions|
                              self.calculate_triangular_movement(position, positions)
                            end
@@ -16,7 +15,9 @@ class WhaleTreachery
     movement
   end
 
-  def self.find_minimum_movement_position(start_position, interval, positions, start_position_movement=nil, run_count=0, &block)
+  # TODO: further optimize by starting with very small interval, expand if one of others is better, shrink back down once start is best.
+  # Also should probably just compare two positions at a time.
+  def self.find_minimum_movement_position(start_position, interval, positions, start_position_movement=nil, &block)
     block ||= block_given? ? block : method(:calculate_movement)
 
     lower_position = start_position - interval
@@ -26,6 +27,7 @@ class WhaleTreachery
     results[start_position] = start_position_movement || block.call(start_position, positions)
     results[lower_position] = block.call(lower_position, positions)
     results[higher_position] = block.call(higher_position, positions)
+    puts results
 
     best_position, best_position_movement = results.min { |(_, v1), (_, v2)| v1 <=> v2 }
 
@@ -33,10 +35,10 @@ class WhaleTreachery
 
     # if start position movement is best: keep same start position and divide interval in half
     if start_position == best_position
-      self.find_minimum_movement_position(start_position, (interval / 2.0).ceil, positions, start_position_movement, run_count + 1, &block)
+      self.find_minimum_movement_position(start_position, (interval / 2.0).ceil, positions, start_position_movement, &block)
     else
       # if one of the others is better: use that as new start position & keep same interval, run again
-      self.find_minimum_movement_position(best_position, interval, positions, best_position_movement, run_count + 1, &block)
+      self.find_minimum_movement_position(best_position, interval, positions, best_position_movement, &block)
     end
   end
 
@@ -47,8 +49,12 @@ class WhaleTreachery
   def self.calculate_triangular_movement(position, positions)
     positions.reduce(0) do |total, pos|
       distance = (position - pos).abs
-      total + (distance * (distance + 1) / 2)
+      total + self.triangular_number_for(distance)
     end
+  end
+
+  def self.triangular_number_for(num)
+    num  * (num + 1) / 2
   end
 
   def self.find_average(arr)
