@@ -68,19 +68,6 @@ class SevenSegmentSearch
     outputs.map { |output| decoded_digits.find { |_, v| v == output }.first }
   end
 
-  def self.update_decoded_outputs(undecoded_outputs:, decoded_outputs:, decoded_digit:)
-    undecoded_outputs.each_with_object({
-      decoded_outputs: decoded_outputs.dup,
-      undecoded_outputs: []
-    }) do |undecoded_output, memo|
-      if decoded_digit[:segments] == undecoded_output[:segments]
-        memo[:decoded_outputs][undecoded_output[:original_index]] == decoded_digit[:value]
-      else
-        memo[:undecoded_outputs] << undecoded_output
-      end
-    end
-  end
-
   def self.unique_digit_for(str)
     case str.length
     when 2
