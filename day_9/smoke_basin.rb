@@ -1,12 +1,9 @@
 class SmokeBasin
   def self.run(data: File.readlines('./day_9/data.txt', chomp: true), basins: false)
     rows = data.map { |row| row.chars.map(&:to_i) }
-    @@points_explored = Array.new(rows.length) { Array.new(rows.first.length) { '-' } }
     if basins
       basins = find_basins(rows)
       new_rows = rows.map { |row| row.dup }
-      vis = new_rows.map { |r| r.join(' ')}.join("\n")
-      puts vis
       basins.each { |basin| basin.each { |row_i, col_i| new_rows[row_i][col_i] = 'x' } }
       multiply_size_of_three_largest_basins(basins)
     else
@@ -24,14 +21,6 @@ class SmokeBasin
     low_points.map do |_, low_point_coords|
       find_basin_from_point(low_point_coords, rows, [low_point_coords]).sort
     end.uniq
-  end
-
-  def self.map_points_explored(coords)
-    puts '***********************'
-    row_i, col_i = coords
-    @@points_explored[row_i][col_i] = 'x'
-    vis_map = @@points_explored.map(&:join).join("\n")
-    puts vis_map
   end
 
   def self.find_basin_from_point(coords, rows, basin_points)
@@ -59,23 +48,7 @@ class SmokeBasin
   end
 
   def self.is_new_part_of_basin?(value, coords, rows, basin_points)
-    return false if value == 9 || basin_points.include?(coords)
-
-    up_loc_value, up_loc_coords = up_location(*coords, rows)
-    return false unless value < up_loc_value || basin_points.include?(up_loc_coords)
-
-    down_loc_value, down_loc_coords = down_location(*coords, rows)
-    return false unless value < down_loc_value || basin_points.include?(down_loc_coords)
-
-    left_loc_value, left_loc_coords = left_location(*coords, rows)
-    return false unless value < left_loc_value || basin_points.include?(left_loc_coords)
-
-    right_loc_value, right_loc_coords = right_location(*coords, rows)
-    return false unless value < right_loc_value || basin_points.include?(right_loc_coords)
-
-    map_points_explored(coords)
-
-    true
+    value != 9 && is_in_bounds?(*coords, rows) && !basin_points.include?(coords)
   end
 
   def self.sum_risk_levels(low_points)
